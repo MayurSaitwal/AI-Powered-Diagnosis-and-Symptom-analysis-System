@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How It Works — AI Medical Triage</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/how_it_works.css') }}">
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+      <div class="logo">
+          <div class="logo-mark"></div>
+          AI Medical Triage
+      </div>
+
+      <a href="{{ url_for('symptom_form') }}" class="btn-primary">
+          Launch Assessment
+      </a>
+  </div>
+</header>
+
+<main class="container">
+
+<section class="hero reveal">
+    <h1>How Our AI Triage Engine Works</h1>
+    <p>
+        A multi-layer intelligent system combining structured medical inputs,
+        rule-based safety protocols, and AI-assisted urgency modeling.
+    </p>
+</section>
+
+<section class="flow-section reveal">
+    <h2>System Workflow</h2>
+    <div class="flow">
+        <div class="flow-box">Structured Input</div>
+        <div class="connector"></div>
+        <div class="flow-box">Feature Mapping</div>
+        <div class="connector"></div>
+        <div class="flow-box">AI Risk Engine</div>
+        <div class="connector"></div>
+        <div class="flow-box">Classification</div>
+        <div class="connector"></div>
+        <div class="flow-box">Guidance Output</div>
+    </div>
+</section>
+
+<section class="card-section reveal">
+    <h2>Structured Data Collection</h2>
+    <div class="card">
+        <ul>
+            <li>Standardized symptom categories</li>
+            <li>Severity scale mapping</li>
+            <li>Duration weighting</li>
+            <li>Age & vulnerability modifiers</li>
+            <li>Automatic red-flag detection</li>
+        </ul>
+    </div>
+</section>
+
+<section class="card-section reveal">
+    <h2>AI Risk Engine</h2>
+    <div class="card">
+        <ul>
+            <li>Weighted multi-factor scoring</li>
+            <li>Red-flag override logic</li>
+            <li>Confidence-based classification</li>
+            <li>Safety-prioritized model bias</li>
+        </ul>
+    </div>
+</section>
+
+<section class="risk-section reveal">
+    <h2>Risk Classification</h2>
+    <div class="grid">
+        <div class="risk low">
+            <h3>Low Risk</h3>
+            <p>Stable symptoms, monitoring advised.</p>
+        </div>
+        <div class="risk medium">
+            <h3>Medium Risk</h3>
+            <p>Escalation suggested for clinician review.</p>
+        </div>
+        <div class="risk high">
+            <h3>High Risk</h3>
+            <p>Immediate emergency advisory triggered.</p>
+        </div>
+    </div>
+</section>
+
+<section class="impact reveal">
+    <h2>Designed for Real Healthcare Systems</h2>
+    <p>
+        This architecture reduces unnecessary emergency visits while prioritizing
+        high-risk patients with conservative safety thresholds.
+    </p>
+</section>
+
+</main>
+
+<footer class="footer">
+AI Medical Triage • Clinical Decision Support System
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+window.addEventListener('scroll', () => {
+  reveals.forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if(top < window.innerHeight - 100){
+      el.classList.add('active');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

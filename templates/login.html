@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Login</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+    <main class="login-shell">
+        <section class="login-card">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true"></div>
+                <div>
+                    <p class="brand-kicker">AI Triage System</p>
+                    <h1>Patient Portal</h1>
+                </div>
+            </div>
+            <p class="subtitle">Secure sign-in for personalized triage guidance and record access.</p>
+            {% if error %}
+            <div class="login-error" role="alert">{{ error }}</div>
+            {% endif %}
+            <form action="/login_check" method="POST">
+                <label class="field">
+                    <span>Email or username</span>
+                    <input type="text" name="identifier" placeholder="you@domain.com or your name" required>
+                </label>
+                <label class="field">
+                    <span>Password</span>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </label>
+                <div class="form-row">
+                    <label class="remember">
+                        <input type="checkbox" name="remember">
+                        <span>Keep me signed in</span>
+                    </label>
+                    <a class="assist" href="#">Forgot password?</a>
+                </div>
+                <button type="submit" class="primary-btn" >Sign in</button>
+            </form>
+            <p class="meta">By continuing, you agree to the platform security policy.</p>
+        </section>
+        <aside class="login-visual" aria-hidden="true">
+            <div class="glass-panel">
+                <h3>Clinical precision, delivered calmly</h3>
+                <p>Trusted assessments powered by secure workflows and real-time triage insights.</p>
+                <div class="badge-grid">
+                    <div class="badge">HIPAA-ready</div>
+                    <div class="badge">24/7 access</div>
+                    <div class="badge">Encrypted</div>
+                </div>
+                <div class="pulse"></div>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

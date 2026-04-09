@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/predict.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="result-card">
+
+        {% if error %}
+            <div class="error-section">
+                <div class="error-icon">⚠️</div>
+                <h2>{{ error }}</h2>
+            </div>
+            <div class="footer-section">
+                <a href="/patient_dashboard" class="back-btn">← Back to Dashboard</a>
+            </div>
+        {% else %}
+
+            <div class="header-section">
+                <div class="header-icon">🩺</div>
+                <h1>Prediction Result</h1>
+                <p class="subtitle">AI-assisted symptom assessment</p>
+            </div>
+
+            <div class="section symptoms-section">
+                <h3><span class="section-icon">📝</span> Entered Symptoms</h3>
+                <div class="symptoms-list">
+                    {% for symptom in symptoms %}
+                        <span class="symptom-chip">{{ symptom }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="section top-prediction">
+                <h3><span class="section-icon">🎯</span> Top Prediction</h3>
+                <div class="disease-box">
+                    <div class="disease-name">{{ disease }}</div>
+                    <div class="confidence-row">
+                        <span>Confidence</span>
+                        <strong>{{ confidence }}%</strong>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" data-fill="{{ confidence }}"></div>
+                    </div>
+                    <div class="severity-badge {{ severity|lower }}">Severity: {{ severity }}</div>
+                </div>
+                <p class="section-note">Model confidence represents pattern similarity with known symptom clusters and should be clinically validated.</p>
+            </div>
+
+            {% if urgency_payload %}
+            <div class="section urgency-section">
+                <h3><span class="section-icon">⏱️</span> Urgency Meter</h3>
+                <div class="urgency-head">
+                    <p class="urgency-score">Score: {{ urgency_payload.score }}/100</p>
+                    <span class="urgency-band {{ urgency_payload.band|lower }}">{{ urgency_payload.band }}</span>
+                </div>
+                <div class="urgency-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ urgency_payload.score }}" aria-label="Urgency score">
+                    <div class="urgency-fill" data-fill="{{ urgency_payload.score }}"></div>
+                </div>
+                <ul class="urgency-actions">
+                    {% for action in urgency_payload.actions %}
+                    <li>{{ action }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if disease_insights %}
+            <div class="section insights-section">
+                <h3><span class="section-icon">🧭</span> Clinical Insight Snapshot</h3>
+                <div class="insights-grid">
+                    {% for insight in disease_insights %}
+                    <div class="insight-card">
+                        <p class="insight-title">{{ insight.title }}</p>
+                        <h4>{{ insight.value }}</h4>
+                        <p>{{ insight.detail }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="section predictions-section">
+                <h3><span class="section-icon">📊</span> All Possible Predictions</h3>
+                <div class="predictions-grid">
+                    {% for p in predictions %}
+                        <div class="prediction-card">
+                            <div class="prediction-name">{{ p.disease }}</div>
+                            <div class="prediction-confidence">{{ p.confidence }}%</div>
+                            <div class="prediction-bar">
+                                <div class="prediction-fill" data-fill="{{ p.confidence }}"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if confidence_breakdown %}
+            <div class="section confidence-breakdown-section">
+                <h3><span class="section-icon">🔎</span> Confidence Breakdown</h3>
+                <div class="breakdown-metrics">
+                    <div class="breakdown-card">
+                        <p>Matched symptoms</p>
+                        <strong>{{ confidence_breakdown.matched_count }}</strong>
+                    </div>
+                    <div class="breakdown-card">
+                        <p>Unmatched symptoms</p>
+                        <strong>{{ confidence_breakdown.unmatched_count }}</strong>
+                    </div>
+                    <div class="breakdown-card">
+                        <p>Prediction ambiguity</p>
+                        <strong>{{ confidence_breakdown.ambiguity }}</strong>
+                    </div>
+                </div>
+
+                {% if confidence_breakdown.matched_symptoms %}
+                <div class="breakdown-row">
+                    <p class="breakdown-label">Strongly contributing symptoms</p>
+                    <div class="chip-wrap">
+                        {% for symptom in confidence_breakdown.matched_symptoms %}
+                        <span class="analysis-chip positive">{{ symptom.replace('_', ' ') }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if confidence_breakdown.unmatched_symptoms %}
+                <div class="breakdown-row">
+                    <p class="breakdown-label">Not recognized from dataset vocabulary</p>
+                    <div class="chip-wrap">
+                        {% for symptom in confidence_breakdown.unmatched_symptoms %}
+                        <span class="analysis-chip negative">{{ symptom.replace('_', ' ') }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="section precautions-section">
+                <h3><span class="section-icon">💡</span> Recommended Precautions</h3>
+                {% if precaution_groups %}
+                    {% for group_name, items in precaution_groups.items() %}
+                    <div class="precaution-group">
+                        <h4>{{ group_name }}</h4>
+                        <ul class="precautions-list">
+                            {% for item in items %}
+                            <li class="precaution-item">{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <ul class="precautions-list">
+                        {% for item in precautions %}
+                            <li class="precaution-item">{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <p class="section-note">Use precautions as supportive guidance while arranging formal medical review.</p>
+            </div>
+
+            {% if urgent_care_signals %}
+            <div class="section urgent-care-section">
+                <h3><span class="section-icon">🚨</span> Urgent Care Watchouts</h3>
+                <ul class="urgent-list">
+                    {% for signal in urgent_care_signals %}
+                    <li>{{ signal }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="section consultation-section">
+                <h3><span class="section-icon">👩‍⚕️</span> Doctor Consultation Next Step</h3>
+                <div class="consultation-card">
+                    <p>Share this result with a qualified clinician to validate diagnosis, especially if symptoms persist, worsen, or interfere with routine activity.</p>
+                    <div class="consultation-actions">
+                        <a href="/contact" class="consult-btn">Contact Care Team</a>
+                        <a href="/how_it_works" class="consult-btn alt">Understand Model Method</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <p class="disclaimer">This AI output is informational and does not replace professional medical advice.</p>
+                <div class="action-buttons">
+                    <a href="{{ url_for('download_report') }}" class="download-btn">⬇ Download Full Report (PDF)</a>
+                    <a href="/patient_dashboard" class="back-btn">← Back to Dashboard</a>
+                </div>
+            </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+    function clampPercent(value) {
+        const numeric = Number.parseFloat(value);
+        if (Number.isNaN(numeric)) {
+            return 0;
+        }
+        return Math.max(0, Math.min(100, numeric));
+    }
+
+    document.querySelectorAll('[data-fill]').forEach((element) => {
+        const percent = clampPercent(element.getAttribute('data-fill'));
+        element.style.width = `${percent}%`;
+    });
+</script>
+
+</body>
+</html>

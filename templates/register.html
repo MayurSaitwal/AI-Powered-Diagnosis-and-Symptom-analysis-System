@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
+    <link rel="stylesheet" href="/static/css/register.css">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5 mb-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Patient Registration</h4>
+            <small>Create your health profile for early risk detection</small>
+        </div>
+
+        <div class="card-body">
+            <div class="stepper" aria-label="Registration progress">
+                <div class="step active"><span>1</span><p>Identity</p></div>
+                <div class="step"><span>2</span><p>Health Baseline</p></div>
+                <div class="step"><span>3</span><p>Consent</p></div>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+            <form action="/register_complete" method="POST">
+
+                <!-- Basic Identity -->
+                <h6 class="text-secondary mb-3" data-step="1">Basic Information</h6>
+
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="patient_name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                <!-- Demographics -->
+                <h6 class="text-secondary mt-4 mb-3" data-step="2">Demographic Details</h6>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Age</label>
+                        <input type="number" name="age" class="form-control" min="1" max="120" required>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Gender</label>
+                        <select name="gender" class="form-select" required>
+                            <option value="">Select</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- Baseline Health Info (NO symptoms) -->
+                <h6 class="text-secondary mt-4 mb-3">Baseline Health Information</h6>
+
+                <div class="mb-3">
+                    <label class="form-label">Do you have any known medical conditions?</label>
+                    <select name="known_conditions" class="form-select">
+                        <option value="None">None</option>
+                        <option>Diabetes</option>
+                        <option>Hypertension</option>
+                        <option>Heart Disease</option>
+                        <option>Asthma</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Smoking Habit</label>
+                        <select name="smoking" class="form-select">
+                            <option>No</option>
+                            <option>Occasionally</option>
+                            <option>Regularly</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Alcohol Consumption</label>
+                        <select name="alcohol" class="form-select">
+                            <option>No</option>
+                            <option>Occasionally</option>
+                            <option>Regularly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact -->
+                <h6 class="text-secondary mt-4 mb-3" data-step="3">Emergency Contact</h6>
+
+                <div class="mb-3">
+                    <label class="form-label">Emergency Contact Number</label>
+                    <input type="tel" name="emergency_contact" class="form-control" required>
+                </div>
+
+                <!-- Consent -->
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" name="consent" required>
+                    <label class="form-check-label">
+                        I consent to AI-assisted health risk analysis and doctor review.
+                    </label>
+                </div>
+
+                <!-- Hidden Role -->
+                <input type="hidden" name="role" value="patient">
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Register & Create Health Profile
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const stepElements = document.querySelectorAll('.stepper .step');
+    const anchors = document.querySelectorAll('[data-step]');
+
+    function setActiveStep(stepNumber) {
+        stepElements.forEach((step, index) => {
+            const isActive = index + 1 === stepNumber;
+            step.classList.toggle('active', isActive);
+            step.classList.toggle('complete', index + 1 < stepNumber);
+        });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const targetStep = Number(entry.target.getAttribute('data-step'));
+                setActiveStep(targetStep);
+            }
+        });
+    }, { threshold: 0.45 });
+
+    anchors.forEach(anchor => observer.observe(anchor));
+</script>
+
+</body>
+</html>

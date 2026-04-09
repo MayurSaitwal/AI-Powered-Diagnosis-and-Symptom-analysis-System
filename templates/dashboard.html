@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Medical Triage — Intelligent Care Routing</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="mesh-bg"></div>
+
+<header class="site-header">
+    <nav class="nav container">
+        <a class="logo" href="{{ url_for('home') }}">
+            <div class="logo-mark"></div>
+            <span>AI Medical Triage</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="{{ url_for('how_it_works') }}">How It Works</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+        </div>
+
+        <a class="btn btn-primary" href="{{ url_for('patient') }}">
+            Launch Assessment
+        </a>
+    </nav>
+</header>
+
+<main>
+
+<!-- HERO -->
+<section class="hero container">
+
+    <div class="hero-left">
+        <div class="badge">
+            AI-Powered • Clinical Logic Engine 
+        </div>
+
+        <h1>
+            Intelligent Symptom Triage
+            <span class="gradient-text">Built for National-Scale Healthcare.</span>
+        </h1>
+
+        <p class="lead">
+            A next-generation AI system that evaluates symptoms, prioritizes urgency,
+            and delivers clinically aligned guidance in seconds.
+        </p>
+
+        <div class="cta-group">
+            <a class="btn btn-primary" href="{{ url_for('patient') }}">
+                Start Symptom Check
+            </a>
+            <a class="btn btn-outline" href="#workflow">
+                View Workflow
+            </a>
+        </div>
+
+        <div class="hero-metrics">
+            <div>
+                <h3>97.4%</h3>
+                <p>Triage Alignment</p>
+            </div>
+            <div>
+                <h3>&lt; 3s</h3>
+                <p>Avg Response Time</p>
+            </div>
+            <div>
+                <h3>24/7</h3>
+                <p>System Availability</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW PREMIUM RIGHT PANEL -->
+    <div class="hero-right">
+
+        <div class="ai-panel">
+
+            <div class="panel-header">
+                <span>AI Decision Intelligence</span>
+                <span class="status-live">System Active</span>
+            </div>
+
+            <div class="confidence-block">
+                <p>Risk Classification Confidence</p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill"></div>
+                </div>
+                <span class="confidence-score">94.7% Model Confidence</span>
+            </div>
+
+            <div class="decision-tags">
+                <span>✔ Clinical Rule Match</span>
+                <span>✔ Red-Flag Screening</span>
+                <span>✔ Escalation Trigger</span>
+            </div>
+
+            <div class="explain-box">
+                <p><strong>Explainability Layer:</strong></p>
+                <p>Decision based on symptom severity, vital anomalies,
+                and established emergency escalation thresholds.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FEATURES -->
+<section class="section container">
+    <div class="section-header">
+        <p class="eyebrow">Platform Strength</p>
+        <h2>Designed for clinical trust & operational clarity.</h2>
+    </div>
+
+    <div class="grid-4">
+        <div class="card">
+            <h3>Clinical Guardrails</h3>
+            <p>Evidence-aligned logic prioritizing patient safety and risk mitigation.</p>
+        </div>
+        <div class="card">
+            <h3>AI Risk Scoring</h3>
+            <p>Dynamic multi-factor evaluation with structured classification layers.</p>
+        </div>
+        <div class="card">
+            <h3>Explainable Decisions</h3>
+            <p>Transparent reasoning to support clinician oversight and review.</p>
+        </div>
+        <div class="card">
+            <h3>National-Ready</h3>
+            <p>Scalable architecture for public health deployment.</p>
+        </div>
+    </div>
+</section>
+
+<!-- WORKFLOW -->
+<section class="section alt" id="workflow">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Workflow</p>
+            <h2>From patient input to actionable guidance.</h2>
+        </div>
+
+        <div class="timeline">
+            <div class="step">Signal Capture</div>
+            <div class="step">AI Evaluation</div>
+            <div class="step">Risk Classification</div>
+            <div class="step">Guided Recommendation</div>
+        </div>
+    </div>
+</section>
+
+<!-- RISK -->
+<section class="section container">
+    <div class="section-header">
+        <p class="eyebrow">Risk Engine</p>
+        <h2>Clear, color-coded urgency tiers.</h2>
+    </div>
+
+    <div class="grid-3">
+        <div class="risk-card low">Low Risk</div>
+        <div class="risk-card medium">Medium Risk</div>
+        <div class="risk-card high">High Risk</div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta container">
+    <h2>Ready to experience AI-driven triage?</h2>
+    <p>Launch an assessment and explore the decision engine live.</p>
+    <a class="btn btn-primary" href="{{ url_for('symptom_form') }}">
+        Start Assessment
+    </a>
+</section>
+
+</main>
+
+<footer class="footer container">
+    <p>AI Medical Triage • Clinical Decision Support • Hackathon 2026</p>
+</footer>
+
+</body>
+</html>

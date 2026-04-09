@@ -1,0 +1,82 @@
+.triage-section {
+    display: flex;
+    justify-content: center;
+    padding: 80px 20px;
+}
+
+.triage-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 700px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.triage-card h2 {
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.subtitle {
+    color: #cbd5e1;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+textarea,
+input[type="number"] {
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+    color: rgb(117, 12, 12);
+    font-size: 1rem;
+}
+
+textarea:focus,
+input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 10px;
+}
+
+output {
+    margin-top: 5px;
+    font-weight: 600;
+    color: #60a5fa;
+}
+
+.predict-btn {
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 999px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    background: linear-gradient(90deg,#2563eb,#06b6d4);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.predict-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(37,99,235,0.4);
+}

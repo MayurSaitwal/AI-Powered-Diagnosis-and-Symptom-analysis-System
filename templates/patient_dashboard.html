@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap");
+
+        :root {
+            --ink: #11233a;
+            --muted: #5d6b7c;
+            --card: #ffffff;
+            --teal: #0f766e;
+            --cobalt: #1d4ed8;
+            --amber: #d97706;
+            --rose: #be123c;
+            --soft: #eff6ff;
+            --ring: rgba(13, 148, 136, 0.2);
+            --shadow: 0 22px 60px rgba(15, 23, 42, 0.14);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Sora", "Segoe UI", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% 18%, #e0f2fe 0%, rgba(224, 242, 254, 0) 40%),
+                radial-gradient(circle at 85% 20%, #dcfce7 0%, rgba(220, 252, 231, 0) 42%),
+                linear-gradient(135deg, #f8fafc 0%, #fff7ed 55%, #eff6ff 100%);
+            min-height: 100vh;
+            padding: 24px 14px 40px;
+        }
+
+        .shell { max-width: 1220px; margin: 0 auto; }
+
+        .topbar {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 16px 20px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+            animation: rise 0.42s ease;
+        }
+
+        .brand-title {
+            font-family: "Fraunces", serif;
+            font-size: 1.55rem;
+            color: #0f172a;
+        }
+
+        .brand-subtitle { color: var(--muted); font-size: 0.88rem; }
+
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 999px;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(120deg, var(--cobalt), var(--teal));
+            font-size: 0.86rem;
+            font-weight: 600;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .a11y-btn {
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #334155;
+            border-radius: 999px;
+            padding: 8px 10px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .a11y-btn:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 330px minmax(0, 1fr);
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            animation: rise 0.5s ease;
+        }
+
+        .panel h3 {
+            font-family: "Fraunces", serif;
+            font-size: 1.18rem;
+            margin-bottom: 10px;
+        }
+
+        .profile-kicker {
+            font-size: 0.72rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--teal);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .metric-grid {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .metric {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .metric b { display: block; color: #0f172a; font-size: 0.84rem; margin-bottom: 4px; }
+        .metric span { color: var(--muted); font-size: 0.82rem; }
+
+        .history-wrap { margin-top: 16px; }
+
+        .timeline-item {
+            position: relative;
+            padding: 10px 0 10px 18px;
+            border-left: 2px solid #cbd5e1;
+        }
+
+        .timeline-item::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--teal);
+            position: absolute;
+            left: -6px;
+            top: 14px;
+        }
+
+        .timeline-name { font-size: 0.88rem; color: #0f172a; font-weight: 600; }
+        .timeline-meta { color: var(--muted); font-size: 0.79rem; margin-top: 2px; }
+
+        .timeline-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .timeline-link {
+            color: #0f172a;
+            text-decoration: none;
+            font-weight: 700;
+            line-height: 1.35;
+            font-size: 0.9rem;
+        }
+
+        .timeline-link:hover {
+            color: var(--cobalt);
+            text-decoration: underline;
+        }
+
+        .timeline-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .timeline-delete {
+            border: 1px solid #fecdd3;
+            background: #fff1f2;
+            color: #be123c;
+            border-radius: 999px;
+            padding: 4px 9px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .timeline-delete:hover {
+            background: #ffe4e6;
+        }
+
+        .analysis-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 60%, #f0fdfa 100%);
+        }
+
+        .title-wrap h1 {
+            font-family: "Fraunces", serif;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .title-wrap p {
+            color: var(--muted);
+            line-height: 1.55;
+            max-width: 720px;
+        }
+
+        .widget-row {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .widget {
+            background: #ffffff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 11px;
+        }
+
+        .widget strong { display: block; font-size: 1.1rem; color: var(--cobalt); }
+        .widget span { color: var(--muted); font-size: 0.78rem; }
+
+        .personalized-row {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .personalized-card {
+            background: #ffffff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 11px;
+        }
+
+        .personalized-card p {
+            font-size: 0.74rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+
+        .personalized-card strong {
+            font-size: 0.95rem;
+            color: #0f172a;
+        }
+
+        .form-area { margin-top: 18px; }
+
+        .label { font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 8px; display: block; }
+
+        .autocomplete-wrap {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .symptom-input {
+            width: 100%;
+            padding: 12px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .symptom-input:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 4px var(--ring);
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            z-index: 12;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            box-shadow: 0 14px 24px rgba(15, 23, 42, 0.14);
+            overflow: hidden;
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 9px 11px;
+            border: none;
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.88rem;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: #ecfeff;
+        }
+
+        .selected-wrap {
+            min-height: 44px;
+            border: 1px dashed #cbd5e1;
+            background: #fff;
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .symptom-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #eff6ff;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pill-remove {
+            border: none;
+            background: transparent;
+            color: #1e3a8a;
+            cursor: pointer;
+            font-size: 0.86rem;
+            line-height: 1;
+        }
+
+        .quick-row,
+        .library-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            border: 1px solid #cbd5e1;
+            border-radius: 999px;
+            padding: 6px 10px;
+            background: #f8fafc;
+            color: #334155;
+            font-size: 0.79rem;
+            cursor: pointer;
+        }
+
+        .chip:hover { border-color: var(--teal); color: var(--teal); }
+
+        .library-box {
+            margin-top: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            background: #ffffff;
+            padding: 10px;
+        }
+
+        .library-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+
+        .library-title { font-size: 0.86rem; font-weight: 700; color: #0f172a; }
+        .library-count { font-size: 0.75rem; color: var(--muted); }
+
+        .library-search {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 9px 10px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .library-grid {
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .input-hint { color: var(--muted); font-size: 0.75rem; margin-bottom: 8px; }
+
+        .submission-warning {
+            display: none;
+            margin: 8px 0 10px;
+            padding: 9px 10px;
+            border-radius: 10px;
+            border: 1px solid #fecdd3;
+            background: #fff1f2;
+            color: #be123c;
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .manual-box {
+            margin-top: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            background: #fff;
+            padding: 10px;
+        }
+
+        .manual-box p {
+            font-size: 0.76rem;
+            color: #64748b;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .manual-textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 9px 10px;
+            font-family: inherit;
+            font-size: 0.86rem;
+            min-height: 72px;
+            resize: vertical;
+        }
+
+        .manual-textarea:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 4px var(--ring);
+        }
+
+        .btn-row { display: flex; gap: 10px; margin-top: 14px; }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.86rem;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover { transform: translateY(-1px); }
+
+        .btn-primary {
+            color: #fff;
+            background: linear-gradient(120deg, var(--teal), var(--cobalt));
+            flex: 1;
+        }
+
+        .btn-secondary {
+            color: #334155;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            width: 120px;
+        }
+
+        .disclaimer {
+            margin-top: 14px;
+            background: #fff7ed;
+            border-left: 4px solid var(--amber);
+            border-radius: 10px;
+            padding: 10px;
+            color: #9a3412;
+            font-size: 0.8rem;
+            line-height: 1.52;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 980px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .widget-row { grid-template-columns: 1fr; }
+            .personalized-row { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 620px) {
+            .title-wrap h1 { font-size: 1.6rem; }
+            .btn-row { flex-direction: column; }
+            .btn-secondary { width: 100%; }
+            .topbar { flex-direction: column; align-items: flex-start; }
+        }
+
+        body.large-text {
+            font-size: 18px;
+        }
+
+        body.high-contrast {
+            --ink: #000000;
+            --muted: #1f2937;
+            --card: #ffffff;
+            --teal: #004d40;
+            --cobalt: #0b3d91;
+            --ring: rgba(0, 0, 0, 0.25);
+            background: #ffffff;
+        }
+
+        body.high-contrast .panel,
+        body.high-contrast .topbar,
+        body.high-contrast .widget,
+        body.high-contrast .personalized-card,
+        body.high-contrast .library-box,
+        body.high-contrast .metric {
+            border-color: #111827;
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <header class="topbar">
+            <div>
+                <div class="brand-title">AI Triage Patient Workspace</div>
+                <div class="brand-subtitle">Welcome back, {{ username }}. Track symptoms, review trends, and run a new analysis.</div>
+            </div>
+            <div class="topbar-actions">
+                <button type="button" class="a11y-btn" id="toggleTextSize" aria-label="Toggle larger text">Larger Text</button>
+                <button type="button" class="a11y-btn" id="toggleContrast" aria-label="Toggle high contrast mode">High Contrast</button>
+                <a class="logout-btn" href="/logout">Logout</a>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+            <aside class="panel">
+                <div class="profile-kicker">Profile Snapshot</div>
+                <h3>{{ patient_profile.patient_name }}</h3>
+                <p style="color: var(--muted); font-size: 0.84rem;">{{ patient_profile.email }}</p>
+
+                <div class="metric-grid">
+                    <div class="metric"><b>Age</b><span>{{ patient_profile.age }}</span></div>
+                    <div class="metric"><b>Gender</b><span>{{ patient_profile.gender }}</span></div>
+                    <div class="metric"><b>City</b><span>{{ patient_profile.city }}</span></div>
+                    <div class="metric"><b>Smoking</b><span>{{ patient_profile.smoking }}</span></div>
+                    <div class="metric"><b>Alcohol</b><span>{{ patient_profile.alcohol }}</span></div>
+                    <div class="metric"><b>Condition</b><span>{{ patient_profile.known_conditions }}</span></div>
+                </div>
+
+                <div class="history-wrap">
+                    <div class="profile-kicker">Prediction Timeline</div>
+                    {% if prediction_history %}
+                        {% for item in prediction_history %}
+                        <div class="timeline-item">
+                            <div class="timeline-top">
+                                <a class="timeline-link" href="/history/{{ item.id }}">{{ item.disease }} ({{ item.confidence }}%)</a>
+                            </div>
+                            <div class="timeline-meta">{{ item.generated_at }} | Severity: {{ item.severity }} | {{ item.symptom_count }} symptom(s)</div>
+                            <div class="timeline-actions">
+                                <form action="/history/{{ item.id }}/delete" method="POST" onsubmit="return confirm('Delete this analysis from timeline?');">
+                                    <button type="submit" class="timeline-delete">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: var(--muted); font-size: 0.84rem; line-height: 1.6;">No previous assessments yet. Your upcoming analysis will appear here as a visual timeline.</p>
+                    {% endif %}
+                </div>
+            </aside>
+
+            <section class="panel analysis-card">
+                <div class="title-wrap">
+                    <h1>Symptom Analysis Studio</h1>
+                    <p>Use smart search, typo-tolerant autocomplete, and click-to-add chips to build symptom context. The model then returns ranked predictions with precautions and clinical safety guidance.</p>
+                </div>
+
+                <div class="widget-row">
+                    <div class="widget"><strong>{{ symptom_count }}</strong><span>Unique dataset symptoms</span></div>
+                    <div class="widget"><strong>{{ recent_history_count }}</strong><span>Recent assessments in session</span></div>
+                    <div class="widget"><strong>{{ recently_used_symptoms|length }}</strong><span>Recently used symptoms</span></div>
+                </div>
+
+                <div class="personalized-row">
+                    <div class="personalized-card">
+                        <p>Most frequent symptom</p>
+                        <strong>
+                            {% if history_metrics.top_symptoms %}
+                                {{ history_metrics.top_symptoms[0].name }} ({{ history_metrics.top_symptoms[0].count }}x)
+                            {% else %}
+                                Not enough history
+                            {% endif %}
+                        </strong>
+                    </div>
+                    <div class="personalized-card">
+                        <p>Latest severity trend</p>
+                        <strong>{{ history_metrics.last_severity }}</strong>
+                    </div>
+                    <div class="personalized-card">
+                        <p>Health check streak</p>
+                        <strong>{{ history_metrics.check_streak }} day(s)</strong>
+                    </div>
+                </div>
+
+                <form class="form-area" action="/predict" method="POST" onsubmit="return prepareSubmission()">
+                    <label class="label" for="symptomInput">Search and add symptom</label>
+                    <div class="autocomplete-wrap">
+                        <input id="symptomInput" class="symptom-input" type="text" placeholder="Type symptom name (example: stomach pain, vomiting, high fever)" aria-label="Symptom autocomplete input">
+                        <div id="autocompleteList" class="autocomplete-list"></div>
+                    </div>
+
+                    <div class="input-hint">Single combined input: type to get suggestions and filter the symptom library below. All selected symptoms are combined for one prediction.</div>
+                    <div id="submissionWarning" class="submission-warning" role="alert"></div>
+
+                    <label class="label">Selected symptoms</label>
+                    <div id="selectedWrap" class="selected-wrap"></div>
+                    <div class="manual-box">
+                        <p>Manual input (comma separated). You can type here and combine with selected chips.</p>
+                        <textarea id="manualSymptomsInput" class="manual-textarea" placeholder="Example: skin_rash, pus_filled_pimples, blackheads"></textarea>
+                    </div>
+                    <input id="symptomsHidden" type="hidden" name="symptoms" required>
+
+                    <div class="label" style="margin-top: 4px;">Quick picks</div>
+                    <div class="quick-row" id="quickPicks">
+                        {% for symptom in available_symptoms[:14] %}
+                        <button type="button" class="chip" aria-label="Add {{ symptom.replace('_', ' ') }}" onclick="addSymptom('{{ symptom }}')">{{ symptom.replace('_', ' ') }}</button>
+                        {% endfor %}
+                    </div>
+
+                    {% if recently_used_symptoms %}
+                    <div class="label" style="margin-top: 12px;">Recently used in your last report</div>
+                    <div class="quick-row">
+                        {% for symptom in recently_used_symptom_entries %}
+                        <button type="button" class="chip" aria-label="Add recently used symptom {{ symptom.label }}" onclick="addSymptom('{{ symptom.value }}')">{{ symptom.label }}</button>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="library-box">
+                        <div class="library-head">
+                            <div class="library-title">Symptom library</div>
+                            <div class="library-count">{{ symptom_count }} unique entries</div>
+                        </div>
+                        <div id="libraryGrid" class="library-grid">
+                            {% for symptom in available_symptoms %}
+                            <button type="button" class="chip lib-chip" data-label="{{ symptom }}" aria-label="Add symptom {{ symptom.replace('_', ' ') }}" onclick="addSymptom('{{ symptom }}')">{{ symptom.replace('_', ' ') }}</button>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-secondary" onclick="resetSelection()">Clear</button>
+                        <button type="submit" class="btn btn-primary">Run AI Symptom Analysis</button>
+                    </div>
+                </form>
+
+                <div class="disclaimer">
+                    This tool supports early triage and education. It does not replace medical diagnosis. If severe symptoms appear suddenly, seek urgent clinical care.
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script id="availableSymptomsData" type="application/json">{{ available_symptoms|tojson }}</script>
+    <script>
+        const availableSymptoms = JSON.parse(document.getElementById("availableSymptomsData").textContent || "[]");
+        const selectedSymptoms = [];
+        const input = document.getElementById("symptomInput");
+        const list = document.getElementById("autocompleteList");
+        const selectedWrap = document.getElementById("selectedWrap");
+        const hiddenField = document.getElementById("symptomsHidden");
+        const manualInput = document.getElementById("manualSymptomsInput");
+        const warningBox = document.getElementById("submissionWarning");
+        let activeIndex = -1;
+        let visibleSuggestions = [];
+
+        function normalize(value) {
+            return String(value || "").toLowerCase().trim().replace(/\s+/g, "_");
+        }
+
+        function labelize(value) {
+            return String(value || "").replace(/_/g, " ");
+        }
+
+        function levenshtein(a, b) {
+            const m = a.length;
+            const n = b.length;
+            if (!m) return n;
+            if (!n) return m;
+            const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+            for (let i = 0; i <= m; i++) dp[i][0] = i;
+            for (let j = 0; j <= n; j++) dp[0][j] = j;
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
+                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                    dp[i][j] = Math.min(
+                        dp[i - 1][j] + 1,
+                        dp[i][j - 1] + 1,
+                        dp[i - 1][j - 1] + cost
+                    );
+                }
+            }
+            return dp[m][n];
+        }
+
+        function scoreSymptom(query, symptom) {
+            const q = normalize(query).replace(/_/g, " ");
+            const s = normalize(symptom).replace(/_/g, " ");
+            if (!q) return 0;
+            if (s.startsWith(q)) return 100 - (s.length - q.length);
+            if (s.includes(q)) return 75 - (s.indexOf(q));
+            const d = levenshtein(q, s.slice(0, Math.max(q.length, 4)));
+            if (d <= 2) return 55 - (d * 8);
+            return -1;
+        }
+
+        function renderSelected() {
+            selectedWrap.innerHTML = "";
+            if (!selectedSymptoms.length) {
+                selectedWrap.innerHTML = '<span style="color:#64748b;font-size:0.82rem;">No symptoms selected yet.</span>';
+            }
+
+            selectedSymptoms.forEach((symptom, idx) => {
+                const pill = document.createElement("span");
+                pill.className = "symptom-pill";
+                pill.innerHTML = `${labelize(symptom)} <button type="button" class="pill-remove" onclick="removeSymptom(${idx})">x</button>`;
+                selectedWrap.appendChild(pill);
+            });
+
+            hiddenField.value = selectedSymptoms.join(", ");
+            warningBox.style.display = "none";
+            warningBox.textContent = "";
+        }
+
+        function parseManualSymptoms(text) {
+            if (!text) return [];
+            return String(text)
+                .split(',')
+                .map(item => normalize(item))
+                .filter(Boolean);
+        }
+
+        function addSymptom(symptom) {
+            const normalized = normalize(symptom);
+            if (!normalized) return;
+            if (!selectedSymptoms.includes(normalized)) {
+                selectedSymptoms.push(normalized);
+                renderSelected();
+            }
+            input.value = "";
+            closeAutocomplete();
+            input.focus();
+        }
+
+        function removeSymptom(index) {
+            selectedSymptoms.splice(index, 1);
+            renderSelected();
+        }
+
+        function resetSelection() {
+            selectedSymptoms.splice(0, selectedSymptoms.length);
+            renderSelected();
+            input.value = "";
+            closeAutocomplete();
+        }
+
+        function prepareSubmission() {
+            renderSelected();
+
+            const manualSymptoms = parseManualSymptoms(manualInput.value);
+            const combinedSet = new Set([...selectedSymptoms, ...manualSymptoms]);
+            const combined = Array.from(combinedSet);
+            hiddenField.value = combined.join(', ');
+
+            const count = combined.length;
+            if (!count) {
+                warningBox.textContent = "Please add at least one symptom before analysis.";
+                warningBox.style.display = "block";
+                return false;
+            }
+
+            if (count > 25) {
+                warningBox.textContent = "Please keep up to 25 symptoms per analysis for stable output quality.";
+                warningBox.style.display = "block";
+                return false;
+            }
+
+            const lowQualitySingles = ["pain", "fever", "cough"];
+            if (count === 1 && lowQualitySingles.includes(combined[0])) {
+                warningBox.textContent = "Try adding more specific symptoms instead of a single generic one.";
+                warningBox.style.display = "block";
+                return false;
+            }
+            return true;
+        }
+
+        function showAutocomplete(items) {
+            list.innerHTML = "";
+            visibleSuggestions = items;
+            activeIndex = -1;
+
+            if (!items.length) {
+                closeAutocomplete();
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "autocomplete-item";
+                button.textContent = labelize(item);
+                button.onclick = () => addSymptom(item);
+                button.dataset.index = index;
+                list.appendChild(button);
+            });
+
+            list.style.display = "block";
+        }
+
+        function closeAutocomplete() {
+            list.style.display = "none";
+            list.innerHTML = "";
+            visibleSuggestions = [];
+            activeIndex = -1;
+        }
+
+        function updateActiveSuggestion() {
+            const items = list.querySelectorAll(".autocomplete-item");
+            items.forEach(item => item.classList.remove("active"));
+            if (activeIndex >= 0 && items[activeIndex]) {
+                items[activeIndex].classList.add("active");
+            }
+        }
+
+        input.addEventListener("input", () => {
+            const query = input.value.trim();
+            if (!query) {
+                closeAutocomplete();
+                filterLibrary("");
+                return;
+            }
+
+            const candidates = availableSymptoms
+                .map(symptom => ({ symptom, score: scoreSymptom(query, symptom) }))
+                .filter(item => item.score >= 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 8)
+                .map(item => item.symptom);
+
+            showAutocomplete(candidates);
+            filterLibrary(query);
+        });
+
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowDown") {
+                if (!visibleSuggestions.length) return;
+                event.preventDefault();
+                activeIndex = (activeIndex + 1) % visibleSuggestions.length;
+                updateActiveSuggestion();
+            } else if (event.key === "ArrowUp") {
+                if (!visibleSuggestions.length) return;
+                event.preventDefault();
+                activeIndex = (activeIndex - 1 + visibleSuggestions.length) % visibleSuggestions.length;
+                updateActiveSuggestion();
+            } else if (event.key === "Enter") {
+                event.preventDefault();
+                if (visibleSuggestions.length && activeIndex >= 0) {
+                    addSymptom(visibleSuggestions[activeIndex]);
+                } else {
+                    addSymptom(input.value);
+                }
+            } else if (event.key === "Escape") {
+                closeAutocomplete();
+            }
+        });
+
+        manualInput.addEventListener("input", () => {
+            warningBox.style.display = "none";
+            warningBox.textContent = "";
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!list.contains(event.target) && event.target !== input) {
+                closeAutocomplete();
+            }
+        });
+
+        function filterLibrary(rawQuery) {
+            const query = normalize(rawQuery).replace(/_/g, " ");
+            const chips = document.querySelectorAll(".lib-chip");
+            chips.forEach(chip => {
+                const target = chip.dataset.label.replace(/_/g, " ");
+                chip.style.display = !query || target.includes(query) ? "inline-flex" : "none";
+            });
+        }
+
+        const textToggle = document.getElementById("toggleTextSize");
+        const contrastToggle = document.getElementById("toggleContrast");
+
+        function loadAccessibilityModes() {
+            if (localStorage.getItem("dashboardLargeText") === "1") {
+                document.body.classList.add("large-text");
+            }
+            if (localStorage.getItem("dashboardHighContrast") === "1") {
+                document.body.classList.add("high-contrast");
+            }
+        }
+
+        textToggle.addEventListener("click", () => {
+            document.body.classList.toggle("large-text");
+            localStorage.setItem("dashboardLargeText", document.body.classList.contains("large-text") ? "1" : "0");
+        });
+
+        contrastToggle.addEventListener("click", () => {
+            document.body.classList.toggle("high-contrast");
+            localStorage.setItem("dashboardHighContrast", document.body.classList.contains("high-contrast") ? "1" : "0");
+        });
+
+        loadAccessibilityModes();
+        renderSelected();
+    </script>
+</body>
+</html>

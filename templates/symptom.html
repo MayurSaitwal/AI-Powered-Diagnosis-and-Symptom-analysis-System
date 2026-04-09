@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triage Access</title>
+    <link rel="stylesheet" href="/static/css/symptom.css">
+</head>
+<body>
+    <main class="gateway-shell">
+        <aside class="gateway-left">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true"></div>
+                <div>
+                    <p class="brand-kicker">AI Triage System</p>
+                    <h1>Access the triage network</h1>
+                </div>
+            </div>
+            <p class="lead">Select the portal that matches your role to begin a secure, guided workflow.</p>
+            <div class="steps">
+                <div class="step">
+                    <span>01</span>
+                    <p>Choose doctor or patient access.</p>
+                </div>
+                <div class="step">
+                    <span>02</span>
+                    <p>Verify your identity securely.</p>
+                </div>
+                <div class="step">
+                    <span>03</span>
+                    <p>Continue with personalized guidance.</p>
+                </div>
+            </div>
+        </aside>
+
+        <section class="gateway-right">
+            <article class="option-card doctor">
+                <h2>Doctor portal</h2>
+                <p>Prioritize cases, review intakes, and manage clinical decisions.</p>
+                <a class="primary-btn" href="/doctor_login">Continue as Doctor</a>
+            </article>
+            <article class="option-card patient">
+                <h2>Patient portal</h2>
+                <p>Begin your symptom intake and receive tailored recommendations.</p>
+                <a class="secondary-btn" href="/patient">Continue as Patient</a>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
